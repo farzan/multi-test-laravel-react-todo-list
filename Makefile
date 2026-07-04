@@ -1,7 +1,9 @@
 APP_NAME := quick_laravel_test_1
 APP_NETWORK := quick_laravel_test_1_network
 
-COMPOSE := docker compose -f docker/compose.yaml
+COMPOSE := docker compose \
+	-f docker/compose.yaml \
+	--env-file .env
 BUILD := $(COMPOSE) run --rm php-build
 CLI := $(COMPOSE) exec -it php-cli
 
@@ -14,6 +16,7 @@ setup:
 	make up
 
 teardown:
+	$(COMPOSE) down -v
 	@docker network rm $(APP_NETWORK) >/dev/null 2>&1 || true
 
 build:
@@ -36,3 +39,6 @@ shell-cli:
 
 shell-build:
 	$(BUILD) bash
+
+shell-mysql:
+	$(COMPOSE) exec mysql bash
