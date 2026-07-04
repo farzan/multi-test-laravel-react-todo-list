@@ -38,6 +38,9 @@ services:
       - app
 
   php-build:
+    profiles:
+      # Only running when the profile is "utility"
+      - utility
     build:
       context: ..
       dockerfile: docker/images/php/Dockerfile
