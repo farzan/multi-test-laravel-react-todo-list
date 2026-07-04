@@ -34,6 +34,8 @@ ENV PATH="${COMPOSER_HOME}/vendor/bin:${PATH}"
 #
 FROM base AS php-build
 
+RUN apk add --no-cache nodejs npm
+
 USER app
 
 RUN composer global require laravel/installer
