@@ -50,7 +50,8 @@ ps:
 logs:
 	$(COMPOSE) logs -f
 
-
+test:
+	$(CLI) php artisan test
 
 # Shells:
 shell-cli:
