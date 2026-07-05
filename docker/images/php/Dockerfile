@@ -75,4 +75,6 @@ WORKDIR /app
 
 USER app
 
+EXPOSE 9000
+
 CMD ["php-fpm"]

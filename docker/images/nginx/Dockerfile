@@ -1,3 +1,5 @@
 FROM nginx:1.29-alpine
 
-WORKDIR /app
+COPY docker/images/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+WORKDIR /var/www
