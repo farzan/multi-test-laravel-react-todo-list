@@ -4,7 +4,7 @@ APP_NETWORK := quick_laravel_test_1_network
 COMPOSE := docker compose \
 	-f docker/compose.yaml \
 	--env-file .env
-BUILD := $(COMPOSE) run --rm php-build
+BUILD := $(COMPOSE) --profile utility run --rm php-build
 CLI := $(COMPOSE) exec -it php-cli
 
 .PHONY: setup teardown build up down ps logs shell
@@ -25,17 +25,33 @@ setup:
 
 	# backend deps
 	make composer-install
+	make php-migrate
 
 	# frontend deps + build
 	make npm-install
 	make npm-build
-	make npm-deploy
 
 teardown:
-	$(COMPOSE) down --volumes
+	$(COMPOSE) down --volumes --remove-orphans
+
+	# explicitly stop/remove any leftover php-build container
+	-$(COMPOSE) rm -sf php-build >/dev/null 2>&1 || true
+
 	@docker network rm $(APP_NETWORK) >/dev/null 2>&1 || true
-	-rm -rf ./vendor
-	-rm -rf ./node_modules
+
+	# backend dependencies
+	-rm -rf vendor
+
+	# frontend dependencies + build artifacts
+	-rm -rf frontend/node_modules
+	-rm -rf frontend/dist
+
+	# optional: if you want full reset of deployed assets
+	-rm -rf public/frontend
+
+	# legacy cleanup (safe if still present)
+	-rm -rf node_modules
+	-rm -rf npm_modules
 
 build:
 	$(COMPOSE) build
@@ -49,9 +65,8 @@ npm-install:
 npm-build:
 	cd frontend && npm run build
 
-npm-deploy:
-	rm -rf backend/public/assets backend/public/index.html
-	cp -r frontend/dist/* backend/public/
+php-migrate:
+	$(CLI) php artisan migrate
 
 # Run:
 up:
@@ -81,3 +96,6 @@ shell-build:
 
 shell-mysql:
 	$(COMPOSE) exec mysql bash
+
+shell-nginx:
+	$(COMPOSE) exec nginx sh

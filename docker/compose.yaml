@@ -27,14 +27,14 @@ services:
             args:
                 UID: ${UID:-1000}
                 GID: ${GID:-1000}
-        working_dir: /app
+        working_dir: /var/www
         stdin_open: true
         tty: true
         depends_on:
             mysql:
                 condition: service_healthy
         volumes:
-            - ../:/app
+            - ../:/var/www
         networks:
             - app
 
@@ -49,14 +49,14 @@ services:
             args:
                 UID: ${UID:-1000}
                 GID: ${GID:-1000}
-        working_dir: /app
+        working_dir: /var/www
         stdin_open: true
         tty: true
         depends_on:
             mysql:
                 condition: service_healthy
         volumes:
-            - ../:/app
+            - ../:/var/www
         networks:
             - app
 
