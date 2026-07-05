@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Contracts\Repository\TodoItemRepositoryInterface;
-use App\Models\TodoItem;
+use App\Domain\Contracts\Repository\TodoItemRepositoryInterface;
+use App\Domain\Dto\TodoItem;
+use App\Models\TodoItemModel;
 
 class TodoItemRepository implements TodoItemRepositoryInterface
 {
@@ -13,19 +14,34 @@ class TodoItemRepository implements TodoItemRepositoryInterface
      */
     public function getItems(): array
     {
-        return TodoItem::all()->toArray();
+        return TodoItemModel::all()
+            ->map(fn (TodoItemModel $item) => $this->getTodoItem($item))
+            ->toArray();
     }
 
     public function getItem(int $id): TodoItem
     {
-        return TodoItem::findOrFail($id);
+        $item = TodoItemModel::findOrFail($id);
+
+        return $this->getTodoItem($item);
     }
 
     public function create(string $title, bool $completed): TodoItem
     {
-        return TodoItem::create([
+        $item = TodoItemModel::create([
             'title' => $title,
             'completed' => $completed,
         ]);
+
+        return $this->getTodoItem($item);
+    }
+
+    private function getTodoItem(TodoItemModel $item): TodoItem
+    {
+        return new TodoItem(
+            $item->id,
+            $item->title,
+            $item->completed,
+        );
     }
 }

@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Domain\Service;
 
-use App\Contracts\Repository\TodoItemRepositoryInterface;
-use App\Models\TodoItem;
+use App\Domain\Contracts\Repository\TodoItemRepositoryInterface;
+use App\Domain\Dto\TodoItem;
 
 class TodoService
 {
@@ -18,5 +18,10 @@ class TodoService
     public function getItems(): array
     {
         return $this->repo->getItems();
+    }
+
+    public function getItem(int $id): TodoItem
+    {
+        return $this->repo->getItem($id);
     }
 }

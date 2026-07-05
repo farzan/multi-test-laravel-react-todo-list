@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace Tests\Feature\Repository;
+
 use App\Repository\TodoItemRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

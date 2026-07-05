@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Contracts\Repository\TodoItemRepositoryInterface;
+use App\Domain\Contracts\Repository\TodoItemRepositoryInterface;
 use App\Repository\TodoItemRepository;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;

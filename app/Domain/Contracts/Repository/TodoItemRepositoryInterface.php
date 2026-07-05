@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Contracts\Repository;
+namespace App\Domain\Contracts\Repository;
 
-use App\Models\TodoItem;
+use App\Domain\Dto\TodoItem;
 
 interface TodoItemRepositoryInterface
 {
