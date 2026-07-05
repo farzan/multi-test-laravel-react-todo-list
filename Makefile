@@ -53,6 +53,9 @@ logs:
 test:
 	$(CLI) php artisan test
 
+run-front:
+	cd ./frontend && npm run dev
+
 # Shells:
 shell-cli:
 	$(CLI) bash
