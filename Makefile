@@ -9,18 +9,27 @@ CLI := $(COMPOSE) exec -it php-cli
 
 .PHONY: setup teardown build up down ps logs shell
 
-# Setup/Teardown:
+# Build:
 setup:
 	@docker network inspect $(APP_NETWORK) >/dev/null 2>&1 || \
 		docker network create $(APP_NETWORK)
-	-mkdir ./vendor
-	-mkdir ./npm_modules
+
+	-mkdir -p ./vendor
+	-mkdir -p ./npm_modules
+
 	chmod 775 vendor
 	chmod 775 npm_modules
+
 	make build
 	make up
+
+	# backend deps
 	make composer-install
+
+	# frontend deps + build
 	make npm-install
+	make npm-build
+	make npm-deploy
 
 teardown:
 	$(COMPOSE) down --volumes
@@ -35,7 +44,14 @@ composer-install:
 	$(BUILD) composer install
 
 npm-install:
-	$(BUILD) npm install
+	cd frontend && npm install
+
+npm-build:
+	cd frontend && npm run build
+
+npm-deploy:
+	rm -rf backend/public/assets backend/public/index.html
+	cp -r frontend/dist/* backend/public/
 
 # Run:
 up:
